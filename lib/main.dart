@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:for_aveds/src/bll/auth_service.dart';
-import 'package:for_aveds/src/ui/login_page.dart';
+import 'package:for_aveds/src/features/bll/auth_service.dart';
+import 'package:for_aveds/src/features/ui/login_email_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(
+      home: LoginEmailPage(
         authService: AuthService(),
       ),
     );
