@@ -3,20 +3,25 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   Future<Map<String, String>> login(String email) async {
-    var response = await http.post(
-      Uri.parse('https://d5dsstfjsletfcftjn3b.apigw.yandexcloud.net/login'),
-      body: jsonEncode(<String, String>{
-        'email': email,
-      }),
-    );
+    try {
+      var response = await http.post(
+        Uri.parse('https://d5dsstfjsletfcftjn3b.apigw.yandexcloud.net/login'),
+        body: jsonEncode(<String, String>{
+          'email': email,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      String rt = data['rt'] ?? '';
-      String jwt = data['jwt'] ?? '';
-      return {'rt': rt, 'jwt': jwt};
-    } else {
-      throw Exception('Failed to login');
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        String rt = data['refresh_token'] ?? '';
+        String jwt = data['jwt'] ?? '';
+        return {'refresh_token': rt, 'jwt': jwt};
+      } else {
+        throw Exception(
+            'Failed to login with status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -32,9 +37,9 @@ class AuthService {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      String rt = data['rt'] ?? '';
+      String rt = data['refresh_token'] ?? '';
       String jwt = data['jwt'] ?? '';
-      return {'rt': rt, 'jwt': jwt};
+      return {'refresh_token': rt, 'jwt': jwt};
     } else {
       throw Exception('Failed to confirm code');
     }
@@ -45,13 +50,19 @@ class AuthService {
       Uri.parse(
           'https://d5dsstfjsletfcftjn3b.apigw.yandexcloud.net/refresh_token'),
       body: jsonEncode(<String, String>{
-        'token': rt,
+        'refresh_token': rt,
       }),
     );
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      return data['jwt'];
+      String newJwt = data['jwt'];
+
+      Future.delayed(const Duration(seconds: 3500), () {
+        refreshToken(rt);
+      });
+
+      return newJwt;
     } else {
       throw Exception('Failed to refresh token');
     }
