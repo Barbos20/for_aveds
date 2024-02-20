@@ -50,7 +50,7 @@ final textTheme = TextTheme(
   ),
   labelSmall: GoogleFonts.outfit(
     textStyle: const TextStyle(
-      fontSize: 12,
+      fontSize: 14,
       color: Color.fromRGBO(117, 113, 113, 1),
       fontStyle: FontStyle.normal,
       fontWeight: FontWeight.w400,
