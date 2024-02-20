@@ -1,0 +1,19 @@
+{
+    "email":"Enter Your Email",
+    "labelEmail":"Email",
+    "validEmail":"Please enter valid email !",
+    "changeNumber":"Change Number ?",
+    "login":"Login",
+    "loginWith":"Or Login with",
+    "google":"Google",
+    "dontAcc":"You Don`t have an account ?",
+    "signUp":"SignUp",
+    "enterCode":"Enter the code received",
+    "code":"Code",
+    "sendCode":"Send code",
+    "walcomeBack":"Welcome back ,",
+    "error":"error",
+    "errorModalTitle": "There was an error in sending the code. Return to the previous page for re-sending the code.",
+    "ok":"OK",
+    "successfulAuth":"Successful Authorization"
+}

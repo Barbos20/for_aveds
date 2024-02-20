@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
+  String? errorMessage;
+
   Future<Map<String, String>> login(String email) async {
     try {
       var response = await http.post(
@@ -11,37 +13,40 @@ class AuthService {
         }),
       );
 
+      var data = response.statusCode == 200 ? jsonDecode(response.body) : null;
+      String rt = data?['refresh_token'] ?? '';
+      String jwt = data?['jwt'] ?? '';
+      if (data == null) {
+        errorMessage = 'Ошибка ${response.statusCode}';
+      }
+      return {'refresh_token': rt, 'jwt': jwt};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  Future<Map<String, String>> confirmCode(String email, String code) async {
+    try {
+      var response = await http.post(
+        Uri.parse(
+            'https://d5dsstfjsletfcftjn3b.apigw.yandexcloud.net/confirm_code'),
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'code': code,
+        }),
+      );
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         String rt = data['refresh_token'] ?? '';
         String jwt = data['jwt'] ?? '';
         return {'refresh_token': rt, 'jwt': jwt};
       } else {
-        throw Exception(
-            'Failed to login with status code: ${response.statusCode}');
+        errorMessage = 'Ошибка ${response.statusCode}';
+        return {};
       }
     } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<Map<String, String>> confirmCode(String email, String code) async {
-    var response = await http.post(
-      Uri.parse(
-          'https://d5dsstfjsletfcftjn3b.apigw.yandexcloud.net/confirm_code'),
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'code': code,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      String rt = data['refresh_token'] ?? '';
-      String jwt = data['jwt'] ?? '';
-      return {'refresh_token': rt, 'jwt': jwt};
-    } else {
-      throw Exception('Failed to confirm code');
+      return {};
     }
   }
 

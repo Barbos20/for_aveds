@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:for_aveds/generated/l10n.dart';
 import 'package:for_aveds/src/features/bll/auth_manager.dart';
-import 'package:for_aveds/src/features/bll/auth_service.dart';
 import 'package:for_aveds/src/theme/text_theme.dart';
 
 class SucceededLogin extends StatefulWidget {
   const SucceededLogin({
     required this.email,
-    required this.authService,
     required this.jwt,
     super.key,
   });
 
-  final AuthService authService;
   final String email;
   final String jwt;
 
@@ -23,13 +21,6 @@ class SucceededLogin extends StatefulWidget {
 class SucceededLoginState extends State<SucceededLogin> {
   late final AuthManager authManager;
   final emailController = TextEditingController();
-  final codeController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    authManager = AuthManager(authService: widget.authService);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +28,12 @@ class SucceededLoginState extends State<SucceededLogin> {
       appBar: AppBar(
         title: _appBar(),
         backgroundColor: const Color.fromRGBO(229, 229, 229, 0.3),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.only(bottom: 80),
@@ -63,7 +60,7 @@ class SucceededLoginState extends State<SucceededLogin> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Successful Authorization',
+                    S.of(context).successfulAuth,
                     style: textTheme.titleMedium,
                   ),
                   const SizedBox(
@@ -84,7 +81,7 @@ class SucceededLoginState extends State<SucceededLogin> {
         Row(
           children: [
             Text(
-              'Login',
+              S.of(context).login,
               style: textTheme.displayMedium,
             ),
             const SizedBox(
@@ -99,7 +96,7 @@ class SucceededLoginState extends State<SucceededLogin> {
               Flexible(
                 child: Text(
                   overflow: TextOverflow.clip,
-                  'Welcome back , ${widget.email}',
+                  '${S.of(context).walcomeBack} ${widget.email}',
                   style: textTheme.displaySmall,
                 ),
               ),
